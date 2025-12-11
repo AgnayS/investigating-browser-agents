@@ -1,4 +1,4 @@
-https://reliableagents.awi/2025-Q4
+https://reliableagents.ai/2025-Q4
 https://github.com/sagekit/magnitude
 https://github.com/MinorJerry/WebVoyager
 https://github.com/steel-dev/steel-browser
