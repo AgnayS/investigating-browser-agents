@@ -1,0 +1,35 @@
+Rough Notes:
+> We must also investigate SOTA OS automation tools if any
+> also investigate patches / code for agentic browsers
+> See why vision models are doing well + How was their data collected
+  > can we train on our own?
+
+W 1,2: 
+ > Explore existing guides / resources, filter through the noise
+ > Deep dive into the architecure, making sure we understand SOTA agents very well
+ > Understand EVERYTHING that exists out there regarding os / browser automation and their general techniques
+ > Dump links, create references for stuff that we can use, skim their papers and get an idea
+
+W 3 & 4 & 5: 
+ > Use the above's 1) papers 2) blogs 3) Code & understood in depth
+ > Research existing + upcoming vision techniques etc, that we can incorporate
+
+--------------------Checkpoint 1-------------
+ > Comrepshsnive summary of weeks 1-5 
+ > Literature Review
+-----------------------------------------------
+
+W 6,7:
+  > Build out a POC + Memory System + Error handling using the techniques we learnt above
+  > Open source the code, get contributors from other projects if needed
+
+W 8,9:
+ > Buffer
+ > Research what benchmarking tools exist, analyze how they evaluate web agents
+> Prep for presentaiton in week 9
+
+W 10:
+ > Document benchmarks + create a video demo + flesh out a paper explaining all of the above
+ > Or even better, readmes in our codebase explaining how every small thing works in Q4 2025
+
+github: mboutell

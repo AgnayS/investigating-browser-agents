@@ -1,0 +1,9 @@
+https://reliableagents.awi/2025-Q4
+https://github.com/sagekit/magnitude
+https://github.com/MinorJerry/WebVoyager
+https://github.com/steel-dev/steel-browser
+https://github.com/ServiceNow/WorkArena
+https://github.com/ServiceNow/BrowserGym
+https://github.com/simular-ai/agent-s
+https://github.com/steel-dev/awesome-web-agents
+https://github.com/reworkd/tarsier
