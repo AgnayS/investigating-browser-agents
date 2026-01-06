@@ -1,0 +1,16 @@
+{
+  "name": "magnitude-example",
+  "type": "module",
+  "scripts": {
+    "start": "tsx main.ts",
+    "postinstall": "patchright install chromium"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "magnitude-core": "latest"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.0",
+    "typescript": "^5.0.0"
+  }
+}
