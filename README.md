@@ -533,4 +533,125 @@ Is interaction required? (login, form submission, file upload)
 
 ---
 
+## Key Paper: Scaling Computer-Use Agents (bBoN)
+
+**Paper**: "The Unreasonable Effectiveness of Scaling Agents for Computer Use" (arXiv:2510.02250, Oct 2025)
+**Authors**: SIMULAR Research (same team as Agent-S)
+
+### Core Idea
+
+**Wide scaling**: Instead of improving one agent, run N agents in parallel and pick the best trajectory.
+
+```
+Multiple Rollouts → Behavior Narratives → Comparative Judge → Best Trajectory
+```
+
+### Results
+
+| Method | OSWorld 100-step |
+|--------|------------------|
+| Previous SOTA (CoAct-1) | 59.9% |
+| Agent S3 alone | 62.6% |
+| Agent S3 + bBoN (N=10) | **69.9%** |
+| Human performance | 72.0% |
+
+- GPT-5 Mini: 49.8% → 60.2% with bBoN (+10.4% absolute)
+- Near human-level performance achieved
+
+### Technical Contributions
+
+#### 1. Behavior Narratives
+- **Problem**: Raw trajectories too long/noisy for judges to evaluate
+- **Solution**: Convert each step into "facts" describing what actually changed
+- For each transition: `(screenshot_before, action, screenshot_after)` → fact
+- Visual augmentations: red circle (click), blue circle (moveTo), green circle + line (drag)
+- Zoomed crops around action coordinates for fine-grained verification
+- 3-second delay after actions for page loads
+
+**Ablation (Table 4)**:
+| Representation | Success Rate |
+|----------------|--------------|
+| Screenshots only | 56.0% |
+| Naive captioning | 56.8% |
+| **Behavior Narratives** | **60.2%** |
+
+Key insight: Need **transition-level** understanding (before→after), not just state captioning.
+
+#### 2. Comparative vs Independent Ranking
+- WebJudge (independent scoring) plateaus at N=4 and drops at N=10
+- bBoN (comparative MCQ) keeps scaling with more rollouts
+- **Must compare trajectories head-to-head**, not score independently
+
+#### 3. Agent S3 Improvements
+- **Flat policy** instead of hierarchical Manager-Worker
+  - 52% fewer LLM calls
+  - 62% faster execution
+  - +9.1% success rate
+- **Coding agent** integrated into GUI agent's action space
+  - Agent decides when to delegate to code
+  - Bounded inner loop with budget B
+  - Returns summary + verification checklist to GUI agent
+
+#### 4. Mixture-of-Models
+| Mixture | Success Rate | Coverage (Pass@N) |
+|---------|--------------|-------------------|
+| GPT-5 alone | 66.5% | 74.7% |
+| GPT-5 + Gemini 2.5 Pro | **66.7%** | **78.0%** |
+| All 4 models | 65.9% | 75.4% |
+
+**Insight**: Diversity > raw capability for coverage. Best combo is two strong diverse models.
+
+### Failure Modes (12 remaining failures)
+
+#### 1. Vision Hallucinations (8/12)
+- VLM misses fine-grained details (e.g., negative sign "-17.0" read as "17.0")
+- Zooming helps but doesn't fully solve
+- **Fundamental VLM limitation**
+
+#### 2. GUI-Code Handoff Failures (4/12)
+- Code agent succeeds but GUI agent doesn't verify properly
+- GUI agent redoes task via GUI actions → creates verbose narrative
+- **Judge biased toward verbosity** - more actions ≠ better trajectory
+
+### Judge Accuracy
+
+| Metric | Judge Subset | Full Set |
+|--------|--------------|----------|
+| Benchmark alignment | 78.4% | 69.9% |
+| Human alignment | **92.8%** | 76.3% |
+
+Gap explained by imperfect OSWorld evaluation scripts (only check one pre-defined solution).
+
+### Generalization
+
+| Benchmark | Baseline | + bBoN (N=3) | Gain |
+|-----------|----------|--------------|------|
+| WindowsAgentArena | 50.2% | 56.6% | +6.4% |
+| AndroidWorld | 68.1% | 71.6% | +3.5% |
+
+Zero-shot transfer without modification.
+
+### Limitations
+
+1. **Requires VM snapshots** - need repeatable initial states for parallel rollouts
+2. **Shared online resources** - concurrent rollouts can interfere (e.g., same shopping cart)
+3. **Not applicable to real desktops** - can't isolate side effects without VMs
+
+### Key Design Decisions from Prompts
+
+1. **GUI agent must close and reopen applications** after code agent modifies files (reload insufficient)
+2. **Code agent must print file contents** before returning DONE (enables verification)
+3. **Preserve document structure** - only change content, not formatting/layout
+4. **Clean desktop rule** - close any popups/tabs opened during task
+5. **Three-case reflection** - off-track, on-track, or done (no specific action suggestions)
+
+### Implications for Research
+
+1. **Scaling > Architecture**: Even weak models benefit massively from wide scaling
+2. **Hierarchy is dead**: Flat policy beats Manager-Worker and is 2x faster
+3. **Verbosity bias is real**: Judges prefer longer narratives even when wrong
+4. **Vision is the bottleneck**: Fine-grained text recognition remains unsolved
+
+---
+
 *Research compiled from [reliableagents.ai](https://reliableagents.ai/2025-Q4) and individual tool documentation.*
